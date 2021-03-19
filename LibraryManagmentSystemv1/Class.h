@@ -9,7 +9,7 @@ class User {
 		string lastName;
 		string email;
 		string password;
-		int phoneNumber;
+		string phoneNumber;
 
 	public: 
 		string getFirstName() {
@@ -24,15 +24,31 @@ class User {
 		string getPassword() {
 			return password;
 		}
-		int getPhoneNumber() {
+		string getPhoneNumber() {
 			return phoneNumber;
+		}
+
+		void setFirstName(string value) {
+			firstName = value;
+		}
+		void setLastName(string value) {
+			lastName = value;
+		}
+		void setEmail(string value) {
+			email = value;
+		}
+		void setPassword(string value) {
+			password = value;
+		}
+		int setPhoneNumber(string value) {
+			phoneNumber = value;
 		}
 
 		User() {
 
 		}
 
-		User(string _firstName, string _lastName, string _email, string _password, int _phoneNumber) {
+		User(string _firstName, string _lastName, string _email, string _password, string _phoneNumber) {
 			firstName = _firstName;
 			lastName = _lastName;
 			email = _email;

@@ -1,7 +1,7 @@
 ﻿  LibraryManagmentSystemv1.cpp
   Trwa generowanie kodu
-  28 of 38 functions (73.7%) were compiled, the rest were copied from previous compilation.
-    25 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+  6 of 159 functions ( 3.8%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    1 functions had inline decision re-evaluated but remain unchanged
   Zakończono generowanie kodu
   LibraryManagmentSystemv1.vcxproj -> C:\Users\micha\source\repos\LibraryManagmentSystemv1\x64\Release\LibraryManagmentSystemv1.exe
