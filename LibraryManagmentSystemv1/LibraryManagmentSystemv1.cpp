@@ -2,6 +2,7 @@
 #include <mysql.h>
 #include "Class.h"
 #include <Windows.h>
+#include "Validators.h"
 
 
 using namespace std;
@@ -10,6 +11,10 @@ void checkChoiceFromMainMenu(int choice);
 void loggedUser();
 void registerUser();
 void saveUserInDatabase(User user);
+
+
+MYSQL* connection;
+
 
 void mainMenu()
 {
@@ -36,12 +41,76 @@ void mainMenu()
     checkChoiceFromMainMenu(answer);
 }
 
+void connecToDatabase()
+{
+    connection = mysql_init(0);
+    connection = mysql_real_connect(connection, "localhost", "root", "abc123", "Library", 3306, NULL, 0);
+}
+
+bool authenticate(string email, string password)
+{   
+    string querry = "SELECT * FROM USERS";
+    const char* q = querry.c_str();
+    int qstate = mysql_query(connection, q);
+    if (!qstate)
+    {
+        MYSQL_RES* res = mysql_store_result(connection);
+        MYSQL_ROW row;
+        while (row = mysql_fetch_row(res))
+        {
+            if (row[3] == email && row[4] == password)
+            {   
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+void signIn() {
+    system("CLS");
+    string email, password;
+    cout << "\n\n";
+    cout << "                 ---------------------------------------------------" << endl;
+    cout << "                 ----    Welcome in Library Managment System    ----" << endl;
+    cout << "                 ---------------------------------------------------" << endl;
+    cout << "                 ----                  Sign In                  ----" << endl;
+    cout << "                 ---------------------------------------------------" << endl;
+   
+    while (email.length() == 0)
+    {
+        cout << "                                       E-mail: ";
+        cin >> email;
+    }
+
+    while (password.length() == 0)
+    {
+        cout << "                                       Password: ";
+        cin >> password;
+    }
+
+    bool result = authenticate(email, password);
+
+    if (result)
+    {
+        loggedUser();
+    }
+    else
+    {   
+        cout << "\n                      User not found in database...";
+        mainMenu();
+    }
+
+
+}
+
+
 
 void checkChoiceFromMainMenu(int choice) {
     switch (choice) 
     {
         case 1:
-            loggedUser();
+            signIn();
             break;
         case 2:
             registerUser();
@@ -51,6 +120,8 @@ void checkChoiceFromMainMenu(int choice) {
             break;
     }
 }
+
+
 
 void loggedUser() {
     cout << "\n\n";
@@ -79,17 +150,32 @@ void registerUser() {
     cout << "                 ---------------------------------------------------" << endl;
     cout << "                 ----                Registration               ----" << endl;
     cout << "                 ---------------------------------------------------" << endl;
-    cout << "                               First name: ";
-    cin >> firstName;
-    cout << "                               Last name: ";
-    cin >> lastName;
-    cout << "                               E-mail: ";
-    cin >> email;
-    cout << "                               Password: ";
-    cin >> password;
-    cout << "                               Phone number: ";
-    cin >> phoneNumber;
 
+    while (checkNames(firstName) != true) {
+        cout << "                               First name: ";
+        cin >> firstName;
+    }
+
+    while (checkNames(lastName) != true) {
+        cout << "                               Last name: ";
+        cin >> lastName;
+    }
+
+    while (checkEmail(email) != true) {
+        cout << "                               E-mail: ";
+        cin >> email;
+    }
+
+    while (checkPassword(password) != true) {
+        cout << "                               Password: ";
+        cin >> password;
+    }
+
+    while (checkPhoneNumber(phoneNumber) != true) {
+        cout << "                               Phone number: ";
+        cin >> phoneNumber;
+    }
+    
     User user = User(firstName, lastName, email, password, phoneNumber);
     saveUserInDatabase(user);
 }
@@ -102,16 +188,13 @@ void saveUserInDatabase(User user) {
 
     cout << "                 Checking the connection.\n";
     Sleep(2500);
-    //system("CLS");
     cout << "                 Checking the connection..\n";
     Sleep(1800);
-    //system("CLS");
     cout << "                 Checking the connection...\n";
     Sleep(800);
 
     if (connection)
     {   
-
         // simulate delay 
         cout << "\n\n";
         cout << "                 Connection established" << endl;
@@ -125,12 +208,9 @@ void saveUserInDatabase(User user) {
         Sleep(900);
         system("CLS");
 
-
-       
         string query = "INSERT INTO USERS(FirstName, LastName, Email, Password, PhoneNumber) VALUES('"+user.getFirstName()+"', '"+user.getLastName()+"', '"+user.getEmail()+"', '"+user.getPassword()+"', '"+user.getPhoneNumber()+"')";
         cout << query;
         mysql_query(connection, query.c_str());
-
     }
 }
 
@@ -142,7 +222,7 @@ void saveUserInDatabase(User user) {
 
 int main()
 {
-
+    connecToDatabase();
     mainMenu();
     
 
