@@ -140,15 +140,26 @@ void adminMenu()
         break;
     case 2:
         fetchAllUsers();
+        cout << "                 Type 'b' to back" << endl;
+        char choice;
+        cout << "                 >> ";
+        cin >> choice;
+        while (choice != 'b')
+        {
+            cout << "                 Type 'b' to back" << endl;
+            cout << "                 >> ";
+            cin >> choice;
+        }
+        adminMenu();
         break;
     case 3:
         addBook();
         break;
     case 4:
-
+        borrowBookViaAdmin();
         break;
     case 5:
-
+        
         break;
     case 6:
         earlyScreen();
@@ -156,9 +167,108 @@ void adminMenu()
     }
 }
 
+bool checkIdUser(char user_id)
+{
+    query = "SELECT EXISTS(SELECT * FROM USERS WHERE ID_USER = '" + to_string(user_id-'0') + "')";
+    mysql_query(connection, query.c_str());
+    MYSQL_RES* res = mysql_store_result(connection);
+    MYSQL_ROW row = mysql_fetch_row(res);
+
+    if (*row[0] == '1')
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool checkIdBook(char book_id)
+{
+    query = "SELECT EXISTS(SELECT * FROM BOOKS WHERE ID_BOOK = '"+to_string(book_id-'0')+"')";
+    mysql_query(connection, query.c_str());
+    MYSQL_RES* res = mysql_store_result(connection);
+    MYSQL_ROW row = mysql_fetch_row(res);
+    
+    if (*row[0] == '1')
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 void borrowBookViaAdmin()
 {
+    fetchAllUsers();
+    cout << endl;
+    cout << "                 If you want back type 'b'" << endl;
+    cout << "                 Choose user by id" << endl;
+    cout << "                 >> ";
+    char user_id;
+    cin >> user_id;
+    while (!isdigit(user_id) || !checkIdUser(user_id))
+    {
+        if (user_id == 'b')
+        {
+            adminMenu();
+            break;
+            return;
+        }
+        cout << "                 Choice user by id" << endl;
+        cout << "                 >> ";
+        cin >> user_id;
+    }
 
+    query = "SELECT * FROM BOOKS";
+    mysql_query(connection, query.c_str());
+    MYSQL_RES* res = mysql_store_result(connection);
+    MYSQL_ROW row;
+    cout << endl;
+    CHECK:while (row = mysql_fetch_row(res))
+    {
+        cout << "                 " << row[0] << " " << row[1] << " " << row[2] << " " << row[3] << " " << row[4] << " " << row[5] << " " << row[6] << endl;
+    }
+    cout << endl;
+    cout << "                 Now choose book which user want to borrow by id" << endl;
+    cout << "                 >> ";
+    char book_id;
+    cin >> book_id;
+    while (!isdigit(book_id) || !checkIdBook(book_id))
+
+    {
+        if (book_id == 'b')
+        {
+            adminMenu();
+            break;
+            return;
+        }
+        cout << "                 Choose book which user want to borrow by id" << endl;
+        cout << "                 >> ";
+        cin >> book_id;
+        
+        
+    }
+        query = "SELECT COUNTBOOKS FROM BOOKS WHERE ID_BOOK = '" + to_string(book_id - '0') + "'";
+        mysql_query(connection, query.c_str());
+        MYSQL_RES* r = mysql_store_result(connection);
+        MYSQL_ROW rw = mysql_fetch_row(r);
+
+        if (*rw[0] == '0')
+        {
+            cout << "                 No copy in stock" << endl;
+            goto CHECK;
+        }
+        cout << endl;
+        cout << "                 Borrowing a book..." << endl;
+    query = "INSERT INTO BORROWS VALUES('" + to_string(user_id-'0') + "', '" + to_string(book_id-'0') + "')";
+    mysql_query(connection, query.c_str());
+    query = "UPDATE BOOKS SET COUNTBOOKS = COUNTBOOKS-1 WHERE ID_BOOK = '" + to_string(book_id - '0') + "'";
+    mysql_query(connection, query.c_str());
+    adminMenu();
 }
 
 void addBook()
@@ -203,8 +313,6 @@ void fetchAllUsers()
     {
         cout << "                 " << row[0] << " " << row[1] << " " << row[2] << " " << row[3] << " " << row[5] << " " << row[6] << endl;
     }
-
-
 }
 
 void mainMenu()
