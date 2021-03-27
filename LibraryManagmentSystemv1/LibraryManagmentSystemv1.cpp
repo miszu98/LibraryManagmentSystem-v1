@@ -5,7 +5,6 @@
 #include "Validators.h"
 #include <string>
 
-
 using namespace std;
 
 void checkChoiceFromMainMenu(int choice);
@@ -23,6 +22,10 @@ void fetchAllUsers();
 void saveBook(Book book);
 void borrowBookViaAdmin();
 void addBook();
+void fetchBooksByUserId(char user_id);
+bool checkIdUser(char user_id);
+void returnBookViaAdmin();
+bool checkIdBook(char book_id);
 
 int id_user;
 
@@ -139,18 +142,33 @@ void adminMenu()
         registerUser();
         break;
     case 2:
+        START:
         fetchAllUsers();
-        cout << "                 Type 'b' to back" << endl;
+        cout << endl;
+        cout << "                 Type 'b' to back or user id to see which books user borrows" << endl;
         char choice;
         cout << "                 >> ";
         cin >> choice;
+        while (!isdigit(choice) || !checkIdUser(choice))
+        {
+            if (choice == 'b')
+            {
+                adminMenu();
+                break;
+            }
+            cin >> choice;
+        }
+
+        cout << endl;
+        fetchBooksByUserId(choice);
+        cout << endl;
         while (choice != 'b')
         {
             cout << "                 Type 'b' to back" << endl;
             cout << "                 >> ";
             cin >> choice;
         }
-        adminMenu();
+        goto START;
         break;
     case 3:
         addBook();
@@ -159,11 +177,82 @@ void adminMenu()
         borrowBookViaAdmin();
         break;
     case 5:
-        
+        returnBookViaAdmin();
         break;
     case 6:
         earlyScreen();
         break;
+    }
+}
+
+void returnBookViaAdmin()
+{
+    fetchAllUsers();
+    cout << endl;
+    cout << "                 If you want back type 'b'" << endl;
+    cout << "                 Choose user by id" << endl;
+    cout << "                 >> ";
+    char user_id;
+    cin >> user_id;
+    while (!isdigit(user_id) || !checkIdUser(user_id))
+    {
+        if (user_id == 'b')
+        {
+            adminMenu();
+            break;
+            return;
+        }
+        cout << "                 Choice user by id" << endl;
+        cout << "                 >> ";
+        cin >> user_id;
+    }
+
+    query = "SELECT * FROM BOOKS";
+    mysql_query(connection, query.c_str());
+    MYSQL_RES* res = mysql_store_result(connection);
+    MYSQL_ROW row;
+    cout << endl;
+    fetchBooksByUserId(user_id);
+    cout << endl;
+    cout << "                 Now choose book which user want to return by id" << endl;
+    cout << "                 >> ";
+    char book_id;
+    cin >> book_id;
+    while (!isdigit(book_id) || !checkIdBook(book_id))
+
+    {
+        if (book_id == 'b')
+        {
+            adminMenu();
+            break;
+            return;
+        }
+        cout << "                 Choose book which user want to return by id" << endl;
+        cout << "                 >> ";
+        cin >> book_id;
+
+
+    }
+    
+    cout << endl;
+    cout << "                 Returning a book..." << endl;
+    query = "DELETE FROM BORROWS WHERE ID_USER = '" + to_string(user_id - '0') + "' AND ID_BOOK = '" + to_string(book_id - '0') + "'";
+    mysql_query(connection, query.c_str());
+    query = "UPDATE BOOKS SET COUNTBOOKS = COUNTBOOKS+1 WHERE ID_BOOK = '" + to_string(book_id - '0') + "'";
+    mysql_query(connection, query.c_str());
+    adminMenu();
+}
+
+void fetchBooksByUserId(char user_id)
+{
+    query = "select Borrows.id_user, Books.* from (Borrows inner join Books on Borrows.id_book = Books.id_book) where Borrows.id_user = '"+to_string(user_id-'0')+"'";
+    mysql_query(connection, query.c_str());
+    MYSQL_RES* res = mysql_store_result(connection);
+    MYSQL_ROW row;
+
+    while (row = mysql_fetch_row(res))
+    {
+        cout << "                 " << row[1] << " " << row[2] << " " << row[3] << " " << row[4] << " " << row[5] << " " << row[6] << endl;
     }
 }
 
@@ -412,7 +501,6 @@ void signIn() {
 
 }
 
-
 void checkChoiceFromMainMenu(int choice) 
 {
     switch (choice) 
@@ -452,6 +540,7 @@ void loggedUser()
     cin >> choice;
     checkChoiceFromLoggedUser(choice);
 }
+
 void searchBookByName()
 {
     string name;
