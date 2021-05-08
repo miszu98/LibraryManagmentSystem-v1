@@ -3,8 +3,8 @@ C:\Users\micha\source\repos\LibraryManagmentSystemv1\LibraryManagmentSystemv1\Li
 C:\Users\micha\source\repos\LibraryManagmentSystemv1\LibraryManagmentSystemv1\LibraryManagmentSystemv1.cpp(703,8): warning C4311: "typ rzutowania": obcięcie wskaźnika z "char *" do "int"
 C:\Users\micha\source\repos\LibraryManagmentSystemv1\LibraryManagmentSystemv1\LibraryManagmentSystemv1.cpp(703,8): warning C4302: "typ rzutowania": obcięcie z "char *" do "int"
   Trwa generowanie kodu
-  5 of 235 functions ( 2.1%) were compiled, the rest were copied from previous compilation.
-    1 functions were new in current compilation
-    58 functions had inline decision re-evaluated but remain unchanged
+  0 of 235 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
   Zakończono generowanie kodu
   LibraryManagmentSystemv1.vcxproj -> C:\Users\micha\source\repos\LibraryManagmentSystemv1\x64\Release\LibraryManagmentSystemv1.exe

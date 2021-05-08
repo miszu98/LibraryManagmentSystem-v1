@@ -791,8 +791,6 @@ void saveUserInDatabase(User user)
 }
 
 
-
-
 int main()
 {
     connectToDatabase();
