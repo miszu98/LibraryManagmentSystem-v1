@@ -9,8 +9,8 @@ using namespace std;
 
 void checkChoiceFromMainMenu(int choice);
 void loggedUser();
-void registerUser();
-void saveUserInDatabase(User user);
+void registerUser(bool f);
+void saveUserInDatabase(User user, bool f);
 void fetchAllBooks();
 void checkChoiceFromLoggedUser(int choice);
 void borrowBook(int id_book);
@@ -139,7 +139,7 @@ void adminMenu()
         earlyScreen();
         break;
     case 1:
-        registerUser();
+        registerUser(false);
         break;
     case 2:
         START:
@@ -509,7 +509,7 @@ void checkChoiceFromMainMenu(int choice)
             signIn();
             break;
         case 2:
-            registerUser();
+            registerUser(true);
             break;
         case 3:
             cout << "Zmiana hasła" << endl;
@@ -718,7 +718,7 @@ void borrowBook(int id_book)
     mysql_query(connection, query.c_str());
 }
 
-void registerUser() 
+void registerUser(bool f) 
 {
     system("CLS");
     string firstName, lastName, email, password, phoneNumber;
@@ -755,10 +755,10 @@ void registerUser()
     }
     
     User user = User(firstName, lastName, email, password, phoneNumber);
-    saveUserInDatabase(user);
+    saveUserInDatabase(user, f);
 }
 
-void saveUserInDatabase(User user) 
+void saveUserInDatabase(User user, bool f) 
 {
     cout << "\n\n";
 
@@ -786,7 +786,13 @@ void saveUserInDatabase(User user)
 
         query = "INSERT INTO USERS(FirstName, LastName, Email, Password, PhoneNumber, Role) VALUES('"+user.getFirstName()+"', '"+user.getLastName()+"', '"+user.getEmail()+"', '"+user.getPassword()+"', '"+user.getPhoneNumber()+"', '"+user.getRole()+"')";
         mysql_query(connection, query.c_str());
-        signIn();
+
+        if (f) {
+            signIn();
+        }
+        else {
+            adminMenu();
+        }
     }
 }
 
