@@ -4,6 +4,7 @@
 #include <Windows.h>
 #include "Validators.h"
 #include <string>
+#include <sstream>
 
 using namespace std;
 
@@ -26,6 +27,7 @@ void fetchBooksByUserId(char user_id);
 bool checkIdUser(char user_id);
 void returnBookViaAdmin();
 bool checkIdBook(char book_id);
+void changePassword();
 
 int id_user;
 
@@ -512,7 +514,7 @@ void checkChoiceFromMainMenu(int choice)
             registerUser(true);
             break;
         case 3:
-            cout << "Zmiana hasła" << endl;
+            changePassword();
             break;
     }
 }
@@ -576,8 +578,15 @@ void searchBookByName()
 
         if (choice == 'y')
         {
-            borrowBook(*row[0] - '0');
-            loggedUser();
+            if (checkCountOfBook(*row[0] - '0')) {
+                cout << "Book available..." << endl;
+                borrowBook(*row[0] - '0');
+                loggedUser();
+            }
+            else {
+                cout << "Book noot available..." << endl;
+                searchBookByName();
+            }
         }
         else if (choice == 'b')
         {
@@ -679,6 +688,7 @@ void fetchAllBooks()
             cout << "                 >> ";
             cin >> choice;
         }
+        cout << "CHOICE: " << choice - '0' << endl;
         if (checkCountOfBook(choice - '0'))
         {
             cout << "                 Book available..." << endl;
@@ -700,7 +710,19 @@ bool checkCountOfBook(int id_book)
 
     MYSQL_RES* res = mysql_store_result(connection);
     MYSQL_ROW row = mysql_fetch_row(res);
-    if ((int) row[5] > 0)
+
+    
+    string str = row[5];
+    stringstream SS(str);
+    int result;
+    SS >> result;
+    cout << "CHECK COUNT OF BOOK: " << result << endl;
+    bool s = result > 0;
+    cout << "CHECK COUNT OF BOOK: " << s << endl;
+    bool s1 = result <= 0;
+    cout << "CHECK COUNT OF BOOK: " << s1 << endl;
+
+    if (result > 0)
     {
         return true;
     }
@@ -710,12 +732,13 @@ bool checkCountOfBook(int id_book)
 }
 
 void borrowBook(int id_book)
-{
-    query = "INSERT INTO BORROWS(id_user, id_book) VALUES('"+to_string(id_user)+"', '"+to_string(id_book)+"')";
-    mysql_query(connection, query.c_str());
+{   
 
-    query = "UPDATE BOOKS SET COUNTBOOKS = COUNTBOOKS - 1 WHERE ID_BOOK = '"+to_string(id_book)+"'";
-    mysql_query(connection, query.c_str());
+        query = "INSERT INTO BORROWS(id_user, id_book) VALUES('" + to_string(id_user) + "', '" + to_string(id_book) + "')";
+        mysql_query(connection, query.c_str());
+
+        query = "UPDATE BOOKS SET COUNTBOOKS = COUNTBOOKS - 1 WHERE ID_BOOK = '" + to_string(id_book) + "'";
+        mysql_query(connection, query.c_str());
 }
 
 void registerUser(bool f) 
@@ -738,13 +761,20 @@ void registerUser(bool f)
         cout << "                               Last name: ";
         cin >> lastName;
     }
-
+    
+    cout << "                               E-mail: ";
+    cin >> email;
     while (checkEmail(email) != true) {
+        cout << "                               Wrong format e-mail" << endl;
         cout << "                               E-mail: ";
         cin >> email;
     }
-
+    cout << "                               Password rules: \n                               Digits (1-3)\n                               Lower letters (5 and more)\n                               Uppper letters (1-3)\n                               Special char (1)" << endl;
+    cout << "                               Password: ";
+    cin >> password;
     while (checkPassword(password) != true) {
+        cout << "                               Password is too weak" << endl;
+        cout << "                               Password rules: \n                               Digits (1-3)\n                               Lower letters (5 and more)\n                               Uppper letters (1-3)\n                               Special char (1)" << endl;
         cout << "                               Password: ";
         cin >> password;
     }
@@ -793,6 +823,47 @@ void saveUserInDatabase(User user, bool f)
         else {
             adminMenu();
         }
+    }
+}
+
+void changePassword()
+{
+    string email, oldPassword, newPassword;
+    cout << "                 ---------------------------------------------------" << endl;
+    cout << "                 ----           LMS - Change Password           ----" << endl;
+    cout << "                 ---------------------------------------------------" << endl;
+    cout << "                 Type your email: ";
+    cin >> email;
+    cout << "                 Type your old password: ";
+    cin >> oldPassword;
+    cout << "                               Password rules: \n                               Digits (1-3)\n                               Lower letters (5 and more)\n                               Uppper letters (1-3)\n                               Special char (1)" << endl;
+    cout << "                 Type your new password: ";
+    cin >> newPassword;
+    while (checkPassword(newPassword) != true) {
+        cout << "Password is too weak" << endl;
+        cout << "                               Password rules: \n                               Digits (1-3)\n                               Lower letters (5 and more)\n                               Uppper letters (1-3)\n                               Special char (1)" << endl;
+        cout << "                 Type your new password: ";
+        cin >> newPassword;
+    }
+
+    query = "SELECT EMAIL, PASSWORD FROM USERS WHERE email = '"+email+"'";
+
+    mysql_query(connection, query.c_str());
+
+    MYSQL_RES* res = mysql_store_result(connection);
+    MYSQL_ROW row = mysql_fetch_row(res);
+
+
+    if (row[0] == email && row[1] == oldPassword) {
+        cout << "                 Changing password..." << endl;
+        query = "UPDATE USERS SET PASSWORD = '" + newPassword + "' where email = '" + email + "'";
+        mysql_query(connection, query.c_str());
+        mainMenu();
+    }
+    else 
+    {
+        cout << "                 Wrong email or password" << endl;
+        mainMenu();
     }
 }
 

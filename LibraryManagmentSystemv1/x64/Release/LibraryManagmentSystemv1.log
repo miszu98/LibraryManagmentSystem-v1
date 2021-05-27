@@ -1,6 +1,8 @@
-﻿  Trwa generowanie kodu
-  Previous IPDB and IOBJ mismatch, fall back to full compilation.
-C:\Users\micha\source\repos\LibraryManagmentSystemv1\LibraryManagmentSystemv1\Validators.h(92): warning C4715: "checkPassword”: niewszystkie ścieżki kodu zwracają wartość
-  All 235 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+﻿  LibraryManagmentSystemv1.cpp
+C:\Users\micha\source\repos\LibraryManagmentSystemv1\LibraryManagmentSystemv1\LibraryManagmentSystemv1.cpp(215,15): warning C4101: "row": lokalna zmienna, do której nie istnieje odwołanie
+  Trwa generowanie kodu
+  0 of 264 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
   Zakończono generowanie kodu
   LibraryManagmentSystemv1.vcxproj -> C:\Users\micha\source\repos\LibraryManagmentSystemv1\x64\Release\LibraryManagmentSystemv1.exe
