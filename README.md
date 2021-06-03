@@ -28,7 +28,7 @@
 Before starting, you need to install:
 * MySQL Community Server
 * MySQL Connector/C++
-After this you have to update include and lib directories in your IDE.
+\nAfter this you have to update include and lib directories in your IDE.
 f.e (your paths can looks different)
 ```
 C\Program Files\MySQL\Connector C++\include
