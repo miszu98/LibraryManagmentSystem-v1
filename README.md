@@ -42,7 +42,7 @@ mysqlcppconn.lib
 libmysql.lib
 ```
 Database tables:
-```
+```sql
 create table Users(id_user int primary key auto_increment, FirstName varchar(50), LastName varchar(50), Email varchar(50), Password varchar(50), PhoneNumber int, Role varchar(100));
 insert into USERS(FirstName, LastName, Email, Password, PhoneNumber, Role) values('Roman', 'Nowak', 'roman@wp.pl', '123', '123123123', 'ROLE_ADMIN');
 create table Books(id_book int primary key auto_increment, Author varchar(50), YearOfPublishment varchar(50), Title varchar(100), TypeOfBook varchar(100), CountBooks varchar(50));
