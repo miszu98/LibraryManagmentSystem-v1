@@ -30,7 +30,7 @@ Before starting, you need to install:
 * MySQL Connector/C++
 After this you have to update include and lib directories in your IDE.
 f.e (your paths can looks different)
-```diff
+```
 C\Program Files\MySQL\Connector C++\include
 C\Program Files\MySQL\MySQL Server\include
 C\Program Files\MySQL\Connector C++\lib\opt
