@@ -41,3 +41,11 @@ Last step, now you need add two dependencies to your IDE:
 mysqlcppconn.lib
 libmysql.lib
 ```
+Database tables:
+```
+create table Users(id_user int primary key auto_increment, FirstName varchar(50), LastName varchar(50), Email varchar(50), Password varchar(50), PhoneNumber int, Role varchar(100));
+insert into USERS(FirstName, LastName, Email, Password, PhoneNumber, Role) values('Roman', 'Nowak', 'roman@wp.pl', '123', '123123123', 'ROLE_ADMIN');
+create table Books(id_book int primary key auto_increment, Author varchar(50), YearOfPublishment varchar(50), Title varchar(100), TypeOfBook varchar(100), CountBooks varchar(50));
+create table Borrows(id_user int, id_book int, foreign key (id_user) references Users(id_user), foreign key (id_book) references Books(id_book));
+```
+You can enter data into the tables yourself
