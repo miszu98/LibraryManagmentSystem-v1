@@ -1,5 +1,5 @@
 # LibraryManagmentSystem-v1
-### Concept
+### Conception of system
 ## Assumptions
 ### The assumptions were to create a console system that would allow:
 
@@ -51,3 +51,38 @@ create table Books(id_book int primary key auto_increment, Author varchar(50), Y
 create table Borrows(id_user int, id_book int, foreign key (id_user) references Users(id_user), foreign key (id_book) references Books(id_book));
 ```
 You can enter data into the tables yourself
+
+## Images 
+
+### Main menu
+<p align="left"> 
+  <img src="https://i.imgur.com/NRXttLk.png"  width="700px">
+</p>
+
+### Admin panel
+<p align="left"> 
+  <img src="https://i.imgur.com/NcMQqa3.png"  width="700px">
+</p>
+
+### Admin login 
+<p align="left"> 
+  <img src="https://i.imgur.com/Q9WdUS5.png"  width="700px">
+</p>
+
+### User panel
+<p align="left"> 
+  <img src="https://i.imgur.com/KFn70HB.png"  width="700px">
+  <img src="https://i.imgur.com/MxWGC3n.png"  width="700px">
+</p>
+
+
+### User login 
+<p align="left"> 
+  <img src="https://i.imgur.com/xY2SEZ9.png"  width="700px">
+</p>
+
+
+## Status of project: 
+```diff 
++ COMPLETE
+```
