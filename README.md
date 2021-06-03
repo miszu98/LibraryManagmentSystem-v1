@@ -7,7 +7,7 @@
    * [Login](#admin-login)
    * [Add user](#add-user)
    * [Display all users](#display-all-users)
-      ** [Display borrowed books for each user](#display-borrowed-books)
+   * [Display borrowed books for each user](#display-borrowed-books)
    * [Add book](#add-book)
    * [Borrow book](#borrow-book)
    * [Return book](#return-book)
